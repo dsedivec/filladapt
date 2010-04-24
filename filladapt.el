@@ -405,7 +405,7 @@ With debugging enabled, filladapt will
 		  (throw 'done retval))))))
     (filladapt-funcall 'do-auto-fill)))
 
-(defun filladapt-fill-paragraph (function arg)
+(defun filladapt-fill-paragraph (function &rest args)
   (catch 'done
     (if (and filladapt-mode (null fill-prefix))
 	(save-restriction
@@ -432,7 +432,8 @@ With debugging enabled, filladapt will
 			     (sign 1)
 			     (delta 0))
 			(while (not done)
-			  (setq retval (filladapt-funcall function arg))
+			  (setq retval (apply 'filladapt-funcall
+                                              function args))
 			  (if (filladapt-paragraph-within-fill-tolerance)
 			      (setq done 'success)
 			    (setq delta (1+ delta)
@@ -451,14 +452,15 @@ With debugging enabled, filladapt will
 			;; the old fill-column.
 			(if (not (eq done 'success))
 			    (let ((fill-column old-fill-column))
-			      (setq retval (filladapt-funcall function arg)))))
-		    (setq retval (filladapt-funcall function arg)))
+			      (setq retval (apply 'filladapt-funcall
+                                                  function args)))))
+		    (setq retval (apply 'filladapt-funcall function args)))
 		  (run-hooks 'filladapt-fill-paragraph-post-hook)
 		  (throw 'done retval))))))
     ;; filladapt-adapt failed, so do fill-paragraph normally.
-    (filladapt-funcall function arg)))
+    (apply 'filladapt-funcall function args)))
 
-(defun fill-paragraph (arg)
+(defun fill-paragraph (&optional justify region)
   "Fill paragraph at or after point.  Prefix arg means justify as well.
 
 (This function has been overloaded with the `filladapt' version.)
@@ -468,9 +470,11 @@ space does not end a sentence, so don't break a line there.
 
 If `fill-paragraph-function' is non-nil, we call it (passing our
 argument to it), and if it returns non-nil, we simply return its value."
-  (interactive "*P")
+  (interactive (progn
+		 (barf-if-buffer-read-only)
+		 (list (if current-prefix-arg 'full) t)))
   (let ((filladapt-inside-filladapt t))
-    (filladapt-fill-paragraph 'fill-paragraph arg)))
+    (filladapt-fill-paragraph 'fill-paragraph justify region)))
 
 (defun lisp-fill-paragraph (&optional arg)
   "Like \\[fill-paragraph], but handle Emacs Lisp comments.
