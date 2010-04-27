@@ -922,8 +922,8 @@ See filladapt-adapt."
   (setq filladapt-debug (not filladapt-debug))
   (if (null filladapt-debug)
       (progn
-	(mapcar (function (lambda (e) (filladapt-set-extent-endpoints e 1 1)))
-		filladapt-debug-indentation-extents)
+	(mapc (function (lambda (e) (filladapt-set-extent-endpoints e 1 1)))
+	      filladapt-debug-indentation-extents)
 	(if filladapt-debug-paragraph-extent
 	    (progn
 	      (filladapt-delete-extent filladapt-debug-paragraph-extent)
