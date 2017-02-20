@@ -1,4 +1,5 @@
-;;; Adaptive fill
+;;; filladapt.el --- enhance Auto Fill mode
+;;;
 ;;; Copyright (C) 1989, 1995-1998 Kyle E. Jones
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
@@ -22,6 +23,8 @@
 ;; filladapt|Kyle Jones|kyle_jones@wonderworks.com| 
 ;; Minor mode to adaptively set fill-prefix and overload filling functions|
 ;; 28-February-1998|2.12|~/packages/filladapt.el| 
+
+;;; Commentary:
 
 ;; These functions enhance the default behavior of Emacs' Auto Fill
 ;; mode and the commands fill-paragraph, lisp-fill-paragraph,
@@ -66,6 +69,8 @@
 ;;     filladapt-token-table
 ;;     filladapt-token-match-table
 ;;     filladapt-token-conversion-table
+
+;;; Code:
 
 (and (featurep 'filladapt)
      (error "filladapt cannot be loaded twice in the same Emacs session."))
